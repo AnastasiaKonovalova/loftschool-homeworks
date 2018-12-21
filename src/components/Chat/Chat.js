@@ -3,24 +3,19 @@ import './Chat.css';
 import Message from '../Message';
 
 export default class Chat extends Component {
-    constructor(props){
-        super(props);
-        this.state = {
-            messageInput: '',
-            messages: []
-        };
-        this.changeInputMessage = this.changeInputMessage.bind(this);
-        this.sendMessageOnEnter = this.sendMessageOnEnter.bind(this);
+    state = {
+        messageInput: '',
+        messages: []
     }
 
-    changeInputMessage(e){
+    changeInputMessage = (e) => {
         this.setState({
             messageInput: e.target.value
         })
     }
 
-    sendMessageOnEnter(e){
-        if (e.key === 'Enter' && e.target.value !== ''){
+    sendMessageOnEnter = (e) => {
+        if (e.key === 'Enter' && this.state.messageInput !== ''){
             this.setState({
                 messages: [ ...this.state.messages, {text: this.state.messageInput} ],
                 messageInput: ''
@@ -36,8 +31,12 @@ export default class Chat extends Component {
                         {this.state.messages.map((message) => <Message key = {message.text} text = {message.text}/>)}
                     </div>
                 </div>
-                <input className = 'input-message' value = {this.state.messageInput} 
-                        onChange = {this.changeInputMessage} onKeyPress = {this.sendMessageOnEnter}/>
+                <input
+                    className = 'input-message'
+                    value = {this.state.messageInput} 
+                    onChange = {this.changeInputMessage}
+                    onKeyPress = {this.sendMessageOnEnter}
+                />
             </div>
         )
     }
