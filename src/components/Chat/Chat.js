@@ -20,7 +20,7 @@ export default class Chat extends Component {
     }
 
     sendMessageOnEnter(e){
-        if (e.key === 'Enter'){
+        if (e.key === 'Enter' && e.target.value !== ''){
             this.setState({
                 messages: [ ...this.state.messages, {text: this.state.messageInput} ],
                 messageInput: ''
