@@ -1,95 +1,88 @@
-import React from 'react'
+import React, {Component} from 'react'
 import bond from './assets/bond_approve.jpg';
 import './Form.css';
- const JamesData = {
-  firstName: {
-    value:'james', error: 'Имя указано не верно', errorEmpty: 'Нужно указать имя'
-  }, 
-  lastName: {
-    value:'bond', error: 'Фамилия указана не верно', errorEmpty: 'Нужно указать фамилию'
-  }, 
-  password: {
-    value:'007', error: 'Пароль указан не верно', errorEmpty: 'Нужно указать пароль'
-  }, 
-};
- class Form extends React.Component {
+import AuthField from '../AuthField';
+import Button from '../Button';
+import {user, fieldTranslation, errorMessageTypes} from './assets/data.js'
+
+export default class Form extends Component {
   state = {
-    firstName: '',
-    lastName: '',
-    password: '',
-    errors: {},
-    isValidate: false,
+    values: {
+      firstname: '',
+      lastname: '',
+      password: ''
+    },
+    errorsMessages: {
+      firstname: '',
+      lastname: '',
+      password: ''
+    },
+    isSubmitted: false
   }
-   changeInputText = (e) => {
-    if (this.state.errors[e.target.name]) {      
-      this.setState({
-        [e.target.name]: e.target.value,
-        errors: {},
-      });
-    } else {
-      this.setState({
-        [e.target.name]: e.target.value,
-      });
-    }
+
+  renderFields = () => {
+    const fields = Object.keys(this.state.values);
+    return fields.map(field => {
+      return (
+        <AuthField
+          key={field}
+          translation={fieldTranslation[field]}
+          value={this.state.values[field]}
+          className={field}
+          onChange={this.onChange}
+          errorMessage={this.state.errorsMessages[field]}
+        />
+      )
+    })
   }
-   formValidationSubmit = (e) => {
+
+  onChange = (e) => {
+    this.setState({
+      errorsMessages: {
+        firstname: '',
+        lastname: '',
+        password: ''
+      }
+    });
+    this.setState({
+      values: Object.assign(this.state.values, {[e.target.name]: e.target.value})
+    })
+  }
+
+  submit = (e) => {
     e.preventDefault();
     const errors = {};
-    Object.keys(JamesData).forEach(key => {
-      if (this.state[key] === '') {
-        errors[key] = JamesData[key].errorEmpty;
-      } else if (JamesData[key].value !== this.state[key].toLowerCase()) {
-        errors[key] = JamesData[key].error;
+
+    for (const key in this.state.values){
+      if(this.state.values[key].trim() === ''){
+        errors[key] = errorMessageTypes.emptyInput[key]
+      } else {
+        this.state.values[key] !== user[key].toLowerCase() ?
+        errors[key] = errorMessageTypes.wrongInput[key] :
+        this.setState({ isSubmitted: true })
       }
-    }) 
-    this.setState({errors, isValidate: Object.keys(errors).length === 0});
+    }
+
+    this.setState({
+      errorsMessages: Object.assign(this.state.errorsMessages, errors)
+    })
   }
-   render(){
-    const { firstName, lastName, password, errors, isValidate } = this.state;
-    if (!isValidate){
-      return (
-        <div className="app-container">
-          <form className="message-list" onSubmit={this.formValidationSubmit}  > 
-            <h1>Введите свои данные, агент</h1>
-            <p className="field">
-              <label className="field__label" htmlFor="firstName">
-                <span className="field-label">Имя</span>
-              </label>
-              <input className="field__input field-input t-input-firstname" onChange={this.changeInputText}  type="text" name="firstName" value={firstName}></input>
-              <span className="field__error field-error t-error-firstname">{errors.firstName}</span>
-            </p>     
-            <p className="field">
-              <label className="field__label" htmlFor="lastName">
-                <span className="field-label">Фамилия</span>
-              </label>
-              <input className="field__input field-input t-input-lastname" onChange={this.changeInputText} type="text" name="lastName" value={lastName}></input>
-              <span className="field__error field-error t-error-lastname">{errors.lastName}</span>
-            </p>     
-            <p className="field">
-              <label className="field__label" htmlFor="password">
-                <span className="field-label">Пароль</span>
-              </label>
-              <input className="field__input field-input t-input-password" onChange={this.changeInputText} type="text" name="password" value={password}></input>
-              <span className="field__error field-error t-error-password">{errors.password}</span>
-            </p>     
-              
-            <div className="form__buttons">
-              <input 
-              type="submit"
-              className="button t-submit"                        
-              value="Проверить" 
-              />   
-            </div>                    
-          </form>        
-        </div>     
-      )
-    }  else {
-      return (
-        <div className="app-container">
-         <img src={bond} alt="bond approve" className="t-bond-image" />
-        </div>       
-      )
-    }   
+
+  render(){
+    return (
+      <div className='app-container'>
+        {this.state.isSubmitted ?
+          (
+            <img src={bond} alt='bond' className='t-bond-image'/> 
+          ) : (
+            <form className='form'>
+              <h1>Введите свои данные, агент</h1>
+              {this.renderFields()}
+              <Button onClick = {this.submit}/>
+            </form>
+          )
+        }
+      </div>
+    )
   }
 }
- export default Form;
