@@ -38,33 +38,33 @@ export default class Form extends Component {
 
   onChange = (e) => {
     this.setState({
+      values: { ...this.state.values, ...{[e.target.name]: e.target.value} },
       errorsMessages: {
         firstname: '',
         lastname: '',
         password: ''
       }
-    });
-    this.setState({
-      values: Object.assign(this.state.values, {[e.target.name]: e.target.value})
     })
   }
 
-  submit = (e) => {
+  onSubmit = (e) => {
     e.preventDefault();
     const errors = {};
+    const valuesArr = Object.entries(this.state.values);
 
-    for (const key in this.state.values){
-      if(this.state.values[key].trim() === ''){
-        errors[key] = errorMessageTypes.emptyInput[key]
-      } else {
-        this.state.values[key] !== user[key].toLowerCase() ?
-        errors[key] = errorMessageTypes.wrongInput[key] :
-        this.setState({ isSubmitted: true })
+    valuesArr.forEach(item => {
+      if( item[1] === '' ){
+        errors[item[0]] = errorMessageTypes.emptyInput[item[0]]
       }
-    }
+      else if( item[1] !== user[item[0]].toLowerCase() ){
+        errors[item[0]] = errorMessageTypes.wrongInput[item[0]]
+      }
+    });
+
+    if(!Object.keys(errors).length){this.setState({ isSubmitted: true })}
 
     this.setState({
-      errorsMessages: Object.assign(this.state.errorsMessages, errors)
+      errorsMessages: { ...this.state.errorsMessages, ...errors }
     })
   }
 
@@ -78,7 +78,7 @@ export default class Form extends Component {
             <form className='form'>
               <h1>Введите свои данные, агент</h1>
               {this.renderFields()}
-              <Button onClick = {this.submit}/>
+              <Button onClick = {this.onSubmit}/>
             </form>
           )
         }

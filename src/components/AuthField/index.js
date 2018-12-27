@@ -3,13 +3,11 @@ import PropTypes from 'prop-types';
 
 export default class AuthField extends Component {
     static propTypes = {
-        props: PropTypes.shape({
-            translation: PropTypes.string.isRequired,
-            className: PropTypes.string.isRequired,
-            value: PropTypes.string.isRequired,
-            errorMessage: PropTypes.string.isRequired,
-            onChange: PropTypes.func.isRequired,
-        })
+        translation: PropTypes.string.isRequired,
+        className: PropTypes.string.isRequired,
+        value: PropTypes.string.isRequired,
+        errorMessage: PropTypes.string.isRequired,
+        onChange: PropTypes.func.isRequired,
     }
 
     render(){
