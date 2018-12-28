@@ -11,19 +11,20 @@ export default class AuthField extends Component {
     }
 
     render(){
+        const {translation, className, value, onChange, errorMessage} = this.props;
         return(
             <div className='field'>
                 <label className='field__label'>
-                    <span className='field-label'>{this.props.translation}</span>
+                    <span className='field-label'>{translation}</span>
                     <input 
-                        name={this.props.className}
-                        className={`field__input field-input t-input-${this.props.className}`}
-                        value={this.props.value}
+                        name={className}
+                        className={`field__input field-input t-input-${className}`}
+                        value={value}
                         type='text'
-                        onChange={this.props.onChange}
+                        onChange={onChange}
                     />
                 </label>
-                <span className={`field__error field-error t-error-${this.props.className}`}>{this.props.errorMessage}</span>
+                <span className={`field__error field-error t-error-${className}`}>{errorMessage}</span>
             </div>
         )
     }
