@@ -3,7 +3,7 @@ import Card from '../Card';
 import './Todo.css';
 import withLocalstorage from '../../HOCs/withLocalstorage';
 
-class Todo extends PureComponent {
+export default class Todo extends PureComponent {
   state = {
     inputValue: ''
   };
@@ -14,7 +14,11 @@ class Todo extends PureComponent {
     return biggest + 1;
   }
 
-  handleChange = event => {};
+  handleChange = event => {
+    this.setState({
+      inputValue: event.target.value
+    })
+  };
 
   createNewRecordByEnter = event => {};
 
@@ -23,7 +27,22 @@ class Todo extends PureComponent {
   createNewRecord = () => {};
 
   render() {
-    return;
+    return (
+      <Card title='Список дел'>
+        <div className='todo t-todo-list'>
+          <div className='todo-item todo-item-new'>
+            <input 
+              className='todo-input t-input' 
+              placeholder='Введите задачу' 
+              onChange={this.handleChange}
+              value={this.state.inputValue}
+            />
+            <span className='plus t-plus'>+</span>
+          </div>
+          <div className='todo-item t-todo'></div>
+        </div>
+      </Card>
+    )
   }
 
   renderEmptyRecord() {
