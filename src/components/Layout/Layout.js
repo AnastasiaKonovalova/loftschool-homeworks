@@ -1,7 +1,6 @@
 import React, { Fragment, PureComponent } from 'react';
 import SectionTitle from '../SectionTitle';
 import './Layout.css';
-// import { AuthProvider, AuthConsumer } from '../../contexts/Auth';
 
 class Layout extends PureComponent {
   render() {
@@ -9,7 +8,7 @@ class Layout extends PureComponent {
     return (
       <Fragment>
         {this.renderHeader(header)}
-        <main className='main main--with-header main--with-footer'>
+        <main className={`main ${header && 'main--with-header'} ${footer && 'main--with-footer'}`}>
           <SectionTitle className='main__title'>Main</SectionTitle>
           {children}
         </main>
@@ -19,15 +18,19 @@ class Layout extends PureComponent {
   }
 
   renderHeader = (HeaderChild) => {
+    if(!HeaderChild) return;
     return (
       <header className='header'>
         <SectionTitle className='header__title'>Header</SectionTitle>
-        <HeaderChild/>
+        <div className='header__content'>
+          <HeaderChild/>
+        </div>
       </header>
     )
   }
 
   renderFooter(FooterChild) {
+    if(!FooterChild) return;
     return (
       <footer className='footer'>
         <SectionTitle className='header__title'>Footer</SectionTitle>

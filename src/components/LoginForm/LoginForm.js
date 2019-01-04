@@ -31,9 +31,7 @@ class LoginForm extends PureComponent {
   };
 
   handleSubmit = () => {
-    const {
-      values: { email, password }
-    } = this.state;
+    const { values: { email, password } } = this.state;
     const { authorize } = this.props;
 
     authorize(email, password);

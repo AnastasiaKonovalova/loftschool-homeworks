@@ -6,10 +6,10 @@ class Footer extends PureComponent {
   render() {
     return (
       <AuthConsumer>
-        {({isAuthorized, user}) => (
+        {({isAuthorized, email}) => (
           <p className='footer-message t-footer'>
             {isAuthorized ? (
-              `Вы вошли как ${user.email}`
+              `Вы вошли как ${email}`
             ) : (
               'Вы гость в этой системе'
             )}
