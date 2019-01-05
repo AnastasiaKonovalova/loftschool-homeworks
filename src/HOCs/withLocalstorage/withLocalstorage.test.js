@@ -13,6 +13,7 @@ const testComponent = wrapper.find('TestComponent');
 
 it('У обернутого компонента появляются props: savedData и saveData', () => {
   const propsKeys = Object.keys(testComponent.props());
+  console.log('prps log', propsKeys)
 
   expect(propsKeys).toContain('savedData');
   expect(propsKeys).toContain('saveData');

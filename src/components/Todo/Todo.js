@@ -20,11 +20,14 @@ export default class Todo extends PureComponent {
     })
   };
 
+
   createNewRecordByEnter = event => {};
 
   toggleRecordComplete = event => {};
 
-  createNewRecord = () => {};
+  createNewRecord = () => {
+    console.log('props log', this.props.saveData())
+  };
 
   render() {
     return (
