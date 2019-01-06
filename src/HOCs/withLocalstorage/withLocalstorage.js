@@ -13,7 +13,7 @@ const withLocalstorage = (storageKey, arr) => (WrappedComponent)  => {
             })
         }
 
-        /*eslint-disable */
+        // eslint-disable-next-line max-statements
         saveData = (data) => {
             const {savedData} = this.state;
             let dataArr;
@@ -31,7 +31,6 @@ const withLocalstorage = (storageKey, arr) => (WrappedComponent)  => {
                 savedData: load(storageKey)
             })
         }
-        /*eslint-enable */
 
         render(){
             const {savedData} = this.state;
