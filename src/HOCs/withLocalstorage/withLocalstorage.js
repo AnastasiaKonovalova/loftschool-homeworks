@@ -3,18 +3,41 @@ import { load, save } from '../../localstorage';
 
 const withLocalstorage = (storageKey, arr) => (WrappedComponent)  => {
     return class extends Component{
-        savedData = load(storageKey);
-
-        saveData = (data) => {
-            arr = [...arr, data];
-            console.log(arr);
-            return save(storageKey, arr);
+        state = {
+            savedData: arr
         }
 
+        componentDidMount = () =>{
+            this.setState({
+                savedData: load(storageKey)
+            })
+        }
+
+        /*eslint-disable */
+        saveData = (data) => {
+            const {savedData} = this.state;
+            let dataArr;
+
+            const isOldRecord = (record) => record.id === data.id
+
+            if(!savedData){
+                dataArr = [data]
+            } else if( savedData.findIndex(isOldRecord) !== -1) {
+                dataArr = savedData.map(item => isOldRecord(item) ? data : item)
+            } else { dataArr = [...savedData, data] }
+
+            save(storageKey, dataArr);
+            this.setState({
+                savedData: load(storageKey)
+            })
+        }
+        /*eslint-enable */
+
         render(){
+            const {savedData} = this.state;
             return (
                 <WrappedComponent 
-                    savedData={this.savedData} 
+                    savedData={savedData} 
                     saveData={this.saveData} 
                     {...this.props}
                 />

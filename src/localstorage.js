@@ -5,7 +5,6 @@ function load(localStorageKey) {
   try {
     data = JSON.parse(stringData);
   } catch (e) {}
-
   return data;
 }
 
