@@ -82,7 +82,9 @@ class Todo extends PureComponent {
   }
 
   renderEmptyRecord = () => {
-    return;
+    return (
+      <div className='todo-item t-todo'>Задач нет</div>
+    )
   }
 
   renderRecord = record => {
