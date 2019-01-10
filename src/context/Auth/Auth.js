@@ -11,10 +11,11 @@ class AuthProvider extends Component {
   };
 
   authorize = (email, password) => {
+    
     if (email === this.email && password === this.password) {
       this.setState({ isAuthorized: true, authError: '' });
     } else {
-      this.setState({ authError: 'Почта или пароль не верные' });
+      this.setState({ authError: 'Почта или пароль не верные' }, ()=>console.log('setState Auth'));
     }
   };
 
@@ -24,6 +25,7 @@ class AuthProvider extends Component {
   };
 
   render() {
+    // console.log('Auth render')
     const { children } = this.props;
     return <Provider value={this.getProviderValue()}>{children}</Provider>;
   }
