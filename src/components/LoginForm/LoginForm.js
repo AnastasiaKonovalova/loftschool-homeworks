@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, Fragment } from 'react';
 import { withAuth } from '../../context/Auth';
 import { Redirect } from 'react-router-dom';
 import styles from './LoginForm.module.css';
@@ -48,7 +48,7 @@ class LoginForm extends PureComponent{
 
         return (
             <div className={styles.bg}>
-                <form className={`${styles.form} t-form`} onSubmit={(e)=>e.preventDefault()}>
+                <form className={`${styles.form} t-form`} onSubmit={this.handleSubmit}>
                     {fields.map( field => this.renderField(field) )}
 
                     {authError !== '' && <p className={styles.error}>{authError}</p>}
@@ -62,18 +62,16 @@ class LoginForm extends PureComponent{
     }
 
     render(){
-        console.log('render Form')
-
         const {isAuthorized} = this.props;
 
         return (
-            <>
+            <Fragment>
                 {
                     isAuthorized
                     ? <Redirect to='/app'/>
                     : this.renderForm()
                 }
-            </>
+            </Fragment>
         )
     }
 }
