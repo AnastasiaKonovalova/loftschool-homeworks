@@ -5,3 +5,19 @@
 // В случае ошибки showSuccess
 
 // На забудьте вызвать метод next.
+
+import {show} from '../api';
+import { fetchShowsRequest, getShowsSuccess, getShowsFailure } from '../actions';
+
+export const showMiddleware = store => next => action => {
+    if(action.type === fetchShowsRequest.toString()){
+        show(action.payload)
+            .then(result => {
+                store.dispatch(getShowsSuccess(result))
+            })
+            .catch(error => {
+                store.dispatch(getShowsFailure(error))
+            })
+    }
+    return next(action)
+}
