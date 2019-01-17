@@ -9,7 +9,7 @@
 import {show} from '../api';
 import { fetchShowsRequest, getShowsSuccess, getShowsFailure } from '../actions';
 
-export const showMiddleware = store => next => action => {
+const showMiddleware = store => next => action => {
     if(action.type === fetchShowsRequest.toString()){
         show(action.payload)
             .then(result => {
@@ -21,3 +21,5 @@ export const showMiddleware = store => next => action => {
     }
     return next(action)
 }
+
+export default showMiddleware

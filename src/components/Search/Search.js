@@ -36,6 +36,7 @@ class Search extends Component{
     }
     render(){
         const {inputValue} = this.state;
+        const {search: {isFetching, result, error}} = this.props;
         return (
             <div className='App'>
                 <form className={styles.previewList} onSubmit={this.handleClick}>
@@ -50,7 +51,17 @@ class Search extends Component{
                 </form>
 
                 <div className={`${styles.searchPanel} t-search-result`}>
-                    <ShowPreview/>
+                    {isFetching && <p>Загрузка</p>}
+                    {error && <p>Произошла ошибка: {error.message}</p>}
+                    {result.length > 0 && result.map(show => 
+                        <ShowPreview
+                        key={show.id}
+                        image={show.image}
+                        name={show.name}
+                        id={show.id}
+                        summary={show.summary}
+                        />
+                    )}
                 </div>
             </div>
         )

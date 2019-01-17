@@ -11,7 +11,7 @@
 import {search} from '../api';
 import { fetchSearchRequest, getSearchSuccess, getSearchFailure } from '../actions';
 
-export const searchMiddleware = store => next => action => {
+const searchMiddleware = store => next => action => {
     if(action.type === fetchSearchRequest.toString()){
         search(action.payload)
             .then(result => {
@@ -24,3 +24,4 @@ export const searchMiddleware = store => next => action => {
     return next(action)
 }
 
+export default searchMiddleware

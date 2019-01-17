@@ -1,35 +1,27 @@
+import {combineReducers} from 'redux';
+import {handleActions} from 'redux-actions';
 import {fetchShowsRequest, getShowsSuccess, getShowsFailure} from '../actions';
 
-const initialState = {
-    isFetching: false,
-    showData: [],
-    error: null
-}
+const isFetching = handleActions({
+    [fetchShowsRequest]: () => true,
+    [getShowsSuccess]: () => false,
+    [getShowsFailure]: () => false
+}, false);
 
-export default (state = initialState, action) => {
-    switch (action.type){
-        case fetchShowsRequest.toString():
-            return {
-                ...state,
-                isFetching: true,
-                showData: []
-            }
+const showData = handleActions({
+    [fetchShowsRequest]: () => [],
+    [getShowsSuccess]: (state, action) => action.payload
+}, []);
 
-        case getShowsSuccess.toString():
-            return {
-                ...state,
-                isFetching: false,
-                showData: action.payload
-            }
+const error = handleActions({
+    [fetchShowsRequest]: () => null,
+    [getShowsSuccess]: () => null,
+    [getShowsFailure]: (state, action) => action.payload
+}, null)
 
-        case getShowsFailure.toString():
-            return {
-                ...state,
-                isFetching: false,
-                error: action.payload
-            }
-        
-        default:
-            return state
-    }
-}
+export default combineReducers({
+    isFetching,
+    showData,
+    error
+})
+
