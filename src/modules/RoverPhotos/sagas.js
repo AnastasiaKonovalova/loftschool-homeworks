@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { takeEvery, select, put, call, fork } from 'redux-saga/effects';
 import { getApiKey } from '../Auth';
 import { getPhotos } from './api';
@@ -44,3 +45,6 @@ export default function*() {
   yield fork(fetchRoverWatcher);
   yield fork(changeSolWatcher);
 }
+=======
+// Реализуйте саги
+>>>>>>> upstream/homework-nasa-rover-viewer

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { combineReducers } from 'redux';
 import { handleActions } from 'redux-actions';
 import { addKey } from './actions';
@@ -15,3 +16,6 @@ export default combineReducers({
 
 export const getIsAuthorized = state => !!state.auth.apiKey;
 export const getApiKey = state => state.auth.apiKey;
+=======
+// Реализуйте редьюсер
+>>>>>>> upstream/homework-nasa-rover-viewer

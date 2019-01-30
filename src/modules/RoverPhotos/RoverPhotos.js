@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { handleActions } from 'redux-actions';
 import { combineReducers } from 'redux';
 import {
@@ -64,3 +65,7 @@ export const getSavedPhotos = (state, roverName, solId) => {
 
   return photos[roverName][solId].photos;
 };
+=======
+// Реализуйте редьюсер
+// Файл с тестами RoverPhotos.test.js поможет вам в этом
+>>>>>>> upstream/homework-nasa-rover-viewer
