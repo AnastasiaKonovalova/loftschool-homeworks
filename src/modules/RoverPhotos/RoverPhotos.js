@@ -1,71 +1,93 @@
-<<<<<<< HEAD
-import { handleActions } from 'redux-actions';
-import { combineReducers } from 'redux';
-import {
-  fetchPhotosRequest,
-  fetchPhotosSuccess,
-  fetchPhotosFailure,
-  changeSol
-} from './actions';
-
-export const rovers = ['curiosity', 'opportunity', 'spirit'];
-
-const photos = combineReducers(
-  rovers.reduce((pv, rover) => {
-    pv[rover] = handleActions(
-      {
-        [fetchPhotosRequest]: (state, action) => {
-          const { name, sol } = action.payload;
-          return name === rover
-            ? {
-                ...state,
-                [sol]: { photos: null, isLoaded: false }
-              }
-            : state;
-        },
-        [fetchPhotosSuccess]: (state, action) => {
-          const { name, sol, photos } = action.payload;
-          return name === rover
-            ? { ...state, [sol]: { photos, isLoaded: true } }
-            : state;
-        },
-        [fetchPhotosFailure]: (state, action) => {
-          const { name, sol, error } = action.payload;
-          return name === rover
-            ? { ...state, [sol]: { error, isLoading: false } }
-            : state;
-        }
-      },
-      {}
-    );
-    return pv;
-  }, {})
-);
-
-const sol = handleActions(
-  { [changeSol]: (state, action) => ({ ...state, current: action.payload }) },
-  { current: 1, min: 1, max: 100 }
-);
-
-export default combineReducers({
-  photos,
-  sol
-});
-
-export const getSol = state => state.roverPhotos.sol;
-export const getRoversPhotos = state => state.roverPhotos.photos;
-export const getSavedPhotos = (state, roverName, solId) => {
-  const {
-    roverPhotos: { photos }
-  } = state;
-
-  if (!photos[roverName][solId]) {
-    return null;
-  }
-
-  return photos[roverName][solId].photos;
-};
-=======
 // Реализуйте редьюсер
 // Файл с тестами RoverPhotos.test.js поможет вам в этом
->>>>>>> upstream/homework-nasa-rover-viewer
+import {handleActions} from 'redux-actions';
+import {combineReducers} from 'redux';
+import path from 'ramda/src/path';
+
+
+import {
+    changeSol,
+    fetchPhotosRequest,
+    fetchPhotosSuccess,
+    fetchPhotosFailure
+} from './actions'
+
+const sol = handleActions({
+    [changeSol]: (state, action) => ({...state, current: action.payload})
+}, {
+    current: 1,
+    min: 1,
+    max: 100
+});
+
+const photos = handleActions({
+    [fetchPhotosRequest]: (state, action) => {
+        const currentRover = state[action.payload.name];
+        return ({
+        ...state,
+        [action.payload.name]: {
+            ...currentRover,
+            [action.payload.sol]: {
+                isLoading: true,
+                isLoaded: false,
+                photos: []
+            }
+        }
+    })},
+
+    [fetchPhotosSuccess]: (state, action) => {
+        const currentRover = state[action.payload.name];
+        return ({
+            ...state,
+            [action.payload.name]: {
+                ...currentRover,
+                [action.payload.sol]: {
+                    isLoading: false,
+                    isLoaded: true,
+                    photos: action.payload.photos.photos
+                }
+            }
+        })
+    },
+
+    [fetchPhotosFailure]: (state, action) => {
+        const currentRover = state[action.payload.name];
+        return ({
+            ...state,
+            [action.payload.name]: {
+                ...currentRover,
+                [action.payload.sol]: {
+                    isLoading: false,
+                    isLoaded: true,
+                    error: action.payload.error
+                }
+            }
+        })
+    }
+}, {});
+
+
+export default combineReducers({
+    sol,
+    photos
+});
+
+
+
+export const getSol = state => state.roverPhotos.sol;
+export const getPhotos = state => state.roverPhotos.photos;
+export const getRover = state => rover => state.roverPhotos.photos[rover];
+
+export const getIsLoadedCurry = state => {
+    // console.log('getIsLoadedCurry TEST state', state);
+    return (rover) => {
+        // console.log('getIsLoadedCurry TEST rover', rover);
+            return (sol) => {
+                // console.log('getIsLoadedCurry TEST sol', sol);
+                    return path([rover, `${sol}`, 'isLoaded'])
+                    // return state.roverPhotos.photos[`${rover}`][`${sol}`].isLoaded
+            }
+    }
+};
+
+export const getErrorCurry = state => rover => sol => path([rover, `${sol}`, 'error'])

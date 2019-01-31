@@ -1,77 +1,3 @@
-<<<<<<< HEAD
-import React, { PureComponent } from 'react';
-import { connect } from 'react-redux';
-import SelectSol from '../SelectSol';
-import RoverPhotos from '../RoverPhotos';
-import styles from './RoversViewer.module.css';
-import { getRoversPhotos, rovers } from '../../modules/RoverPhotos';
-import {
-  getSol,
-  changeSol,
-  fetchPhotosRequest
-} from '../../modules/RoverPhotos';
-
-class RoverViewers extends PureComponent {
-  componentDidMount() {
-    const { fetchPhotosRequest, sol } = this.props;
-
-    rovers.forEach(name => fetchPhotosRequest({ name, sol: sol.current }));
-  }
-
-  changeSol = value => {
-    const { changeSol, sol } = this.props;
-
-    value !== sol.current && changeSol(value);
-  };
-
-  renderRoversPhoto = () => {
-    const { photos, sol } = this.props;
-
-    return rovers.map(rover => {
-      const currentPhotos = photos[rover][sol.current];
-      const roverPhotos =
-        !currentPhotos || !currentPhotos.isLoaded ? [] : currentPhotos.photos;
-
-      if (currentPhotos && currentPhotos.error) {
-        return <div>{currentPhotos.error}</div>;
-      }
-
-      return <RoverPhotos name={rover} photos={roverPhotos} key={rover} />;
-    });
-  };
-
-  render() {
-    const { sol } = this.props;
-
-    return (
-      <div className={styles.root}>
-        <SelectSol
-          minSol={sol.min}
-          maxSol={sol.max}
-          selectedSol={sol.current}
-          changeSol={this.changeSol}
-        />
-        <div className={styles.container}>{this.renderRoversPhoto()}</div>
-      </div>
-    );
-  }
-}
-
-const mapStateToProps = state => ({
-  sol: getSol(state),
-  photos: getRoversPhotos(state)
-});
-
-const mapDispatchToProps = {
-  changeSol,
-  fetchPhotosRequest
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(RoverViewers);
-=======
 // Здесь вам нужно реализовать вью
 
 // Подключите его к редакс роутеру
@@ -80,4 +6,82 @@ export default connect(
 
 // Так же вы будете диспатчить экшены CHANGE_SOL и FETCH_PHOTOS_REQUEST
 // Эти экшены находятся в модуле ROVER PHOTOS
->>>>>>> upstream/homework-nasa-rover-viewer
+
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import  path from 'ramda/src/path';
+
+import { fetchPhotosRequest, changeSol } from '../../modules/RoverPhotos/actions';
+import { getSol, getPhotos, getIsLoadedCurry, getErrorCurry } from '../../modules/RoverPhotos/RoverPhotos';
+import SelectSol from '../SelectSol';
+import RoverPhotos from '../RoverPhotos';
+import styles from './RoversViewer.module.css';
+
+class RoversViewer extends Component{
+    rovers = ['curiosity', 'opportunity', 'spirit'];
+    
+    componentDidMount(){
+        const {fetchPhotosRequest} = this.props;
+        this.rovers.forEach(rover => fetchPhotosRequest({
+            name: rover,
+            sol: 1
+        }))
+    }
+
+
+
+    render(){
+        const { photos, 
+            changeSol, 
+            sol: {current, min, max}, 
+            getIsLoaded, 
+            getError } = this.props;
+        // console.log('loloo photos curiosity', photos['curiosity'])
+        // if(photos['curiosity'] && photos['curiosity'][`${current}`]){
+        //     console.log('RoversViewer CURRY',  getIsLoaded('curiosity')(current))
+        // }
+
+        return (
+            <div className={styles.root}>
+                <SelectSol changeSol={changeSol} minSol={min} maxSol={max} selectedSol={current}/>
+                <div className={styles.сontainer}>
+                    {
+                        // this.rovers.map(rover => {
+                        //     const search = path([rover, `${current}`, 'photos']);
+                        //     return search(photos)
+                        //     && <RoverPhotos key={rover} name={rover} photos={photos[rover][`${current}`].photos}/>
+                        // })
+                    }
+                    {
+                        this.rovers.map(rover => {
+                            if( getIsLoaded(rover)(current)(photos) && !getError(rover)(current)(photos) ) {
+                                return <RoverPhotos key={rover} name={rover} photos={photos[rover][`${current}`].photos}/>
+                            } else if ( getIsLoaded(rover)(current)(photos) && getError(rover)(current)(photos) ) {
+                                return <div key={rover}>Ошибка загрузки</div>
+                            }
+                        })
+                    }
+                    {
+                        // this.rovers.map(rover => photos[rover] && photos[rover][`${current}`] && getIsLoaded(rover)(current)
+                        //     && <RoverPhotos key={rover} name={rover} photos={photos[rover][`${current}`].photos}/>)
+                    }
+
+                    {
+                        // this.rovers.map(rover => photos[rover] && photos[rover][`${current}`] && photos[rover][`${current}`].photos 
+                        //     && <RoverPhotos key={rover} name={rover} photos={photos[rover][`${current}`].photos}/>)
+                    }
+                </div>
+            </div>
+        )
+    }
+}
+
+const mapStateToProps = (state) => ({
+        sol: getSol(state),
+        photos: getPhotos(state),
+        getIsLoaded: getIsLoadedCurry(state),
+        getError: getErrorCurry(state)
+});
+const mapDispatchToProps = { fetchPhotosRequest, changeSol };
+
+export default connect(mapStateToProps, mapDispatchToProps)(RoversViewer)
