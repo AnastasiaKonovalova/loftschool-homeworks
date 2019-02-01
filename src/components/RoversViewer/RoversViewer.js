@@ -9,7 +9,6 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import  path from 'ramda/src/path';
 
 import { fetchPhotosRequest, changeSol } from '../../modules/RoverPhotos/actions';
 import { getSol, getPhotos, getIsLoadedCurry, getErrorCurry } from '../../modules/RoverPhotos/RoverPhotos';
@@ -36,22 +35,11 @@ class RoversViewer extends Component{
             sol: {current, min, max}, 
             getIsLoaded, 
             getError } = this.props;
-        // console.log('loloo photos curiosity', photos['curiosity'])
-        // if(photos['curiosity'] && photos['curiosity'][`${current}`]){
-        //     console.log('RoversViewer CURRY',  getIsLoaded('curiosity')(current))
-        // }
 
         return (
             <div className={styles.root}>
                 <SelectSol changeSol={changeSol} minSol={min} maxSol={max} selectedSol={current}/>
                 <div className={styles.сontainer}>
-                    {
-                        // this.rovers.map(rover => {
-                        //     const search = path([rover, `${current}`, 'photos']);
-                        //     return search(photos)
-                        //     && <RoverPhotos key={rover} name={rover} photos={photos[rover][`${current}`].photos}/>
-                        // })
-                    }
                     {
                         this.rovers.map(rover => {
                             if( getIsLoaded(rover)(current)(photos) && !getError(rover)(current)(photos) ) {
@@ -60,15 +48,6 @@ class RoversViewer extends Component{
                                 return <div key={rover}>Ошибка загрузки</div>
                             }
                         })
-                    }
-                    {
-                        // this.rovers.map(rover => photos[rover] && photos[rover][`${current}`] && getIsLoaded(rover)(current)
-                        //     && <RoverPhotos key={rover} name={rover} photos={photos[rover][`${current}`].photos}/>)
-                    }
-
-                    {
-                        // this.rovers.map(rover => photos[rover] && photos[rover][`${current}`] && photos[rover][`${current}`].photos 
-                        //     && <RoverPhotos key={rover} name={rover} photos={photos[rover][`${current}`].photos}/>)
                     }
                 </div>
             </div>

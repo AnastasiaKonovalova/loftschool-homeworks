@@ -78,16 +78,5 @@ export const getSol = state => state.roverPhotos.sol;
 export const getPhotos = state => state.roverPhotos.photos;
 export const getRover = state => rover => state.roverPhotos.photos[rover];
 
-export const getIsLoadedCurry = state => {
-    // console.log('getIsLoadedCurry TEST state', state);
-    return (rover) => {
-        // console.log('getIsLoadedCurry TEST rover', rover);
-            return (sol) => {
-                // console.log('getIsLoadedCurry TEST sol', sol);
-                    return path([rover, `${sol}`, 'isLoaded'])
-                    // return state.roverPhotos.photos[`${rover}`][`${sol}`].isLoaded
-            }
-    }
-};
-
 export const getErrorCurry = state => rover => sol => path([rover, `${sol}`, 'error'])
+export const getIsLoadedCurry = state => rover => sol => path([rover, `${sol}`, 'isLoaded'])
